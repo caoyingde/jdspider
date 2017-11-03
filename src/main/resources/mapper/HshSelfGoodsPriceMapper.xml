@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huilian.spider.dao.HshSelfGoodsPriceMapper">
+	
+	<insert id="syncSelfGoodsToLocal">
+		INSERT INTO hsh_self_goods_price (
+			goods_id,
+			price,
+			supply_price,
+			create_time
+		) SELECT
+			tp.goods_id,
+			tp.basic_price,
+			tp.basic_solu_price,
+			now()
+		FROM
+			hsh_goods tp
+		WHERE
+			tp.type_from = 1
+		AND tp.`status` = 2
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM
+				hsh_self_goods_price gp
+			WHERE
+				gp.goods_id = tp.goods_id
+		)
+	</insert>
+	
+	<select id="findSelfGoodsList" resultType="com.huilian.spider.model.JdGoodsPricePOJO">
+		SELECT
+			t.id,
+			t.price price,
+			t.supply_price supplyPrice
+		FROM
+		hsh_self_goods_price t
+		ORDER BY t.id
+	</select>
+	
+	<update id="batchUpdateGoods" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			update hsh_self_goods_price t set t.last_update=#{now},t.sell_price=#{item.sellPrice},t.charge_free=#{item.chargeFree},t.periods=#{item.periods},t.coupon_amount=#{item.couponAmount}
+			where t.id=#{item.id}
+		</foreach>
+	</update>
+</mapper>

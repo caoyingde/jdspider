@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huilian.spider.dao.JdTopSaleGoodsMapper">
+
+	<insert id="batchInsertGoods" parameterType="java.util.List">
+		INSERT INTO jd_top_sale_goods (keyword,sku,title,price,create_time) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.keyword},#{item.sku},#{item.title},#{item.price},#{item.createTime})
+		</foreach>
+	</insert>
+	
+	<update id="truncateTable">
+        truncate table jd_top_sale_goods
+    </update>
+	
+	<select id="findNewTopSaleGoods" resultType="java.lang.String">
+		SELECT distinct tp.sku FROM jd_top_sale_goods tp 
+		WHERE NOT EXISTS(SELECT 1 FROM jd_goods_price gp WHERE gp.sku=tp.sku)
+	</select>
+</mapper>

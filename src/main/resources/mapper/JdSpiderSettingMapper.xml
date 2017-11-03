@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huilian.spider.dao.JdSpiderSettingMapper">
+	
+	<select id="findByKey" resultType="java.lang.String">
+		SELECT
+			key_value
+		FROM jd_spider_setting
+		WHERE key_name = #{key}
+	</select>
+	
+	<update id="update">
+		UPDATE jd_spider_setting set key_value = #{value} WHERE key_name = #{key}
+	</update>
+	
+	<select id="getGoodsCategoryList" resultType="java.lang.String">
+		select t.category_name from hsh_goods_category t where t.show_category=1 and t.level=3 and t.data_status=0 and t.type='01' group by t.category_name
+	</select>
+	
+</mapper>

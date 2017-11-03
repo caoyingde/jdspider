@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info">
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{80} - %msg%n" />
+		</Console>
+
+		<RollingFile name="RollingFile" fileName="logs/jdspider.log"
+			filePattern="logs/$${date:yyyy-MM}/jdspider.%i.log.zip">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{80} - %msg%n" />
+			<SizeBasedTriggeringPolicy size="500MB" />
+		</RollingFile>
+
+	</appenders>
+
+	<loggers>
+		<Root level="info">
+			<appender-ref ref="RollingFile" />
+			<appender-ref ref="Console" />
+		</Root>
+		
+		<logger name="com.huilian" level="info">
+		</logger>
+	</loggers>
+</configuration>

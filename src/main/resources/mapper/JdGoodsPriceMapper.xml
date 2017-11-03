@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huilian.spider.dao.JdGoodsPriceMapper">
+
+	<select id="findSkuList" resultType="com.huilian.spider.model.JdGoodsPricePOJO">
+		SELECT
+		t.id,
+		t.sku,
+		t.price,
+		t.last_update lastUpdate,
+		t.supply_price supplyPrice,
+		t.sell_status sellStatus
+		FROM
+		jd_goods_price t
+		WHERE t.sell_status=1
+		ORDER BY
+		t.id
+		LIMIT #{0},#{1}
+	</select>
+
+	<select id="findForUpdateSupplyPrice" resultType="com.huilian.spider.model.JdGoodsPricePOJO">
+		SELECT
+		t.id,
+		t.sku,
+		t.price,
+		t.last_update lastUpdate,
+		t.supply_price supplyPrice,
+		t.sell_status sellStatus
+		FROM
+		jd_goods_price t
+		ORDER BY
+		t.id
+		LIMIT #{0},#{1}
+	</select>
+
+	<select id="findNewSku" resultType="java.lang.String">
+		SELECT t.sku FROM jd_goods_price t	WHERE t.sell_status=1 and t.supply_price is null
+	</select>
+
+	<update id="batchUpdatePrice" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			update jd_goods_price t 
+			set t.last_update=CASE WHEN (t.price=#{item.price} and t.sell_status=#{item.sellStatus}) then t.last_update ELSE #{now} END,
+			t.price=#{item.price},t.sell_price=#{item.sellPrice},t.charge_free=#{item.chargeFree},t.periods=#{item.periods},
+			t.coupon_amount=#{item.couponAmount},t.spider_time=#{now},t.sell_status=#{item.sellStatus}
+			where t.sku=#{item.sku}
+		</foreach>
+	</update>
+
+	<update id="batchUpdateSupplyPrice" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			UPDATE jd_goods_price t set t.supply_price=#{item.supplyPrice},t.sell_status=#{item.state} WHERE t.sku=#{item.sku}
+		</foreach>
+	</update>
+	
+	<insert id="batchInsertTopSaleGoods" parameterType="java.util.List">
+		INSERT INTO jd_goods_price (sku,biz_type,create_time) VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item},1,now())
+		</foreach>
+	</insert>
+</mapper>

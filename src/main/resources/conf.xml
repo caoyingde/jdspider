@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+	</typeAliases>
+    
+    <mappers>
+        <mapper resource="mapper/JdGoodsPriceMapper.xml"/>
+        <mapper resource="mapper/JdTopSaleGoodsMapper.xml"/>
+        <mapper resource="mapper/JdGoodsPriceHisMapper.xml"/>
+        <mapper resource="mapper/JdSpiderSettingMapper.xml"/>
+        <mapper resource="mapper/HshSelfGoodsPriceMapper.xml"/>
+    </mappers>
+    
+</configuration>
